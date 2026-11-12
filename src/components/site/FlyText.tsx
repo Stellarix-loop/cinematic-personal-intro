@@ -8,82 +8,44 @@ type FlyTextProps = {
   delay?: number;
   stagger?: number;
   className?: string;
-  /** Paint a single continuous spectrum gradient across all letters */
-  gradient?: boolean;
+  /** Paint letters with the polished chrome gradient */
+  chrome?: boolean;
   seedOffset?: number;
-  label?: string;
 };
 
-/** Glyphs the display font may lack, drawn with safe substitutes. */
-function Glyph({ ch }: { ch: string }) {
-  if (ch === "Λ") return <span className="glyph-flip">V</span>;
-  return <>{ch === " " ? "\u00A0" : ch}</>;
-}
-
-/** Splits text into letters that fly in from scattered positions and settle into place. */
+/** Letters streak in from the right with motion blur, like a car crossing the frame. */
 export function FlyText({
   text,
   start = true,
   delay = 0,
   stagger = 0.045,
   className,
-  gradient = false,
+  chrome = false,
   seedOffset = 0,
-  label,
 }: FlyTextProps) {
   const letters = Array.from(text);
-  const n = letters.length;
-
   return (
-    <span className={cn("inline-block whitespace-nowrap", className)} aria-label={label ?? text} role="text">
+    <span className={cn("inline-block whitespace-nowrap", className)} aria-label={text} role="text">
       {letters.map((ch, i) => {
-        const s = i + seedOffset;
         const from = {
           opacity: 0,
-          x: (seeded(s) - 0.5) * 520,
-          y: (seeded(s + 7) - 0.5) * 360,
-          rotate: (seeded(s + 13) - 0.5) * 120,
-          scale: 0.3 + seeded(s + 21) * 0.6,
-          filter: "blur(14px)",
+          x: 160 + seeded(i + seedOffset) * 120,
+          skewX: -24,
+          filter: "blur(12px)",
         };
         return (
           <motion.span
             key={`${ch}-${i}`}
             aria-hidden
-            className="inline-block will-change-transform"
+            className={cn("inline-block will-change-transform", chrome && "text-chrome")}
             initial={from}
-            animate={start ? { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1, filter: "blur(0px)" } : from}
-            transition={{ duration: 1.1, delay: delay + i * stagger, ease: cinematicEase }}
+            animate={start ? { opacity: 1, x: 0, skewX: 0, filter: "blur(0px)" } : from}
+            transition={{ duration: 0.9, delay: delay + i * stagger, ease: cinematicEase }}
           >
-            <span
-              className={cn("inline-block", gradient && "text-spectrum-static")}
-              style={
-                gradient
-                  ? {
-                      backgroundSize: `${n * 100}% 100%`,
-                      backgroundPosition: `${(i / Math.max(n - 1, 1)) * 100}% 50%`,
-                    }
-                  : {}
-              }
-            >
-              <Glyph ch={ch} />
-            </span>
+            {ch === " " ? "\u00A0" : ch}
           </motion.span>
         );
       })}
-    </span>
-  );
-}
-
-/** Static, font-safe rendering of the alias (no animation). */
-export function AliasText({ text, className }: { text: string; className?: string }) {
-  return (
-    <span className={className} aria-label={text} role="text">
-      {Array.from(text).map((ch, i) => (
-        <span key={i} aria-hidden>
-          <Glyph ch={ch} />
-        </span>
-      ))}
     </span>
   );
 }

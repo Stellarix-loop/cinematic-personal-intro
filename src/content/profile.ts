@@ -1,35 +1,28 @@
-import {
-  BookOpen,
-  Cpu,
-  Gamepad2,
-  Headphones,
-  Hammer,
-  GraduationCap,
-  Tv,
-  type LucideIcon,
-} from "lucide-react";
-import moodCity from "@/assets/mood-city.jpg";
-import moodSetup from "@/assets/mood-setup.jpg";
-import moodMusic from "@/assets/mood-music.jpg";
-import moodTech from "@/assets/mood-tech.jpg";
-import moodSky from "@/assets/mood-sky.jpg";
-import moodAvatar from "@/assets/mood-avatar.jpg";
-import holo from "@/assets/holo-sculpture.jpg";
+import { Code2, Disc3, Film, Gamepad2, Gauge, Headphones, Wrench, type LucideIcon } from "lucide-react";
+import heroCar from "@/assets/hero-car.jpg";
+import tunnel from "@/assets/gallery-tunnel.jpg";
+import rig from "@/assets/gallery-rig.jpg";
+import headphones from "@/assets/gallery-headphones.jpg";
+import tokyo from "@/assets/gallery-tokyo.jpg";
+import detail from "@/assets/gallery-detail.jpg";
+import keyboard from "@/assets/gallery-keyboard.jpg";
+import helmet from "@/assets/gallery-helmet.jpg";
 
 /**
  * ALL site content lives here — edit freely.
- * Everything below is fictional placeholder content. Titles marked as favorites
- * are invented examples; swap them for your real picks. Links are placeholders ("#").
+ * Bio text, favorites and "currently" items are placeholders: swap in your real picks.
+ * Social links below are the real public profiles.
  */
 
 export type Interest = {
   id: string;
+  code: string;
   title: string;
   icon: LucideIcon;
   image: string;
   kicker: string;
   description: string;
-  highlights: string[];
+  specs: { label: string; value: string }[];
   tags: string[];
 };
 
@@ -53,155 +46,172 @@ export type GalleryItem = {
   src: string;
   alt: string;
   caption: string;
+  plate: string;
   width: number;
   height: number;
 };
 
-export type Social = { label: string; handle: string; href: string };
+export type Social = { label: string; handle: string; href: string; cta: string };
 
 export const profile = {
-  /** Public alias. `aliasPlain` is used where special characters may not render. */
-  alias: "NØVΛ",
-  aliasPlain: "NOVA",
-  monogram: "N",
-  introWords: ["Signal", "Found", "Hello"],
-  roles: ["anime soul", "pixel wanderer", "night-owl coder", "playlist curator"],
-  tagline:
-    "A little corner of the internet for everything I love — stories, games, sound and code.",
-  status: "Online · vibing",
-  location: "Somewhere online",
+  alias: "BL4Z3",
+  monogram: "B4",
+  heroImage: heroCar,
+  introWords: ["Ignition", "Telemetry", "Online"],
+  roles: ["Sim racer", "Anime watcher", "Music curator", "Tech tinkerer"],
+  tagline: "A personal hub tuned for late nights — racing lines, anime, sound and code.",
+  status: "Online",
+  edition: "Personal Hub · Edition 01",
 
   about: {
-    eyebrow: "01 — About",
-    heading: "The person behind the alias.",
-    avatar: moodAvatar,
+    eyebrow: "01 — Profile",
+    heading: "The driver behind the alias.",
+    image: helmet,
     paragraphs: [
-      "Hey, I'm NØVΛ — a quiet observer of neon skylines and loud playlists. This is my personal hub: part diary, part moodboard, part museum of things I can't stop talking about.",
-      "I'm happiest somewhere between a late-night anime binge, a co-op session with friends, and tinkering with a side project that probably doesn't need to exist (but definitely should).",
-      "Everything here is a work in progress — just like me. Replace this text with your own story whenever you're ready.",
+      "I go by BL4Z3. This is my personal hub — part garage, part listening room, part archive of the stories and games that stuck with me.",
+      "Most nights you'll find me chasing a cleaner lap, deep in a series, building a playlist for the drive home, or tinkering with something on my desk that doesn't strictly need improving.",
+      "This text is a placeholder. Swap it for your own story whenever you're ready.",
     ],
-    traits: [
-      "Night owl",
-      "Endlessly curious",
-      "Lowkey competitive",
-      "Chronic playlist maker",
-      "Detail nerd",
-      "Soft-spoken, loud taste",
+    specs: [
+      { label: "Designation", value: "BL4Z3" },
+      { label: "Class", value: "Creator / Gamer" },
+      { label: "Base", value: "Online" },
+      { label: "Peak hours", value: "22:00 — 03:00" },
+      { label: "Fuel", value: "Playlists & coffee" },
+      { label: "Mode", value: "Always tuning" },
     ],
-    stats: [
-      { label: "Curiosity", value: 94 },
-      { label: "Creativity", value: 88 },
-      { label: "Night-owl level", value: 97 },
-      { label: "Patience in ranked", value: 41 },
+    tuning: [
+      { label: "Focus", value: 92 },
+      { label: "Curiosity", value: 96 },
+      { label: "Late-night output", value: 98 },
+      { label: "Patience in traffic", value: 34 },
     ],
-    quote: "Stay curious. Stay weird. Stay kind.",
+    traits: ["Night driver", "Detail obsessed", "Quietly competitive", "Playlist architect", "Always learning"],
+    quote: "Smooth is fast. Fast is smooth.",
   },
 
   interests: {
-    eyebrow: "02 — Interests",
-    heading: "Four worlds I live in.",
+    eyebrow: "02 — Disciplines",
+    heading: "Four disciplines, one garage.",
     items: [
       {
         id: "anime",
+        code: "AN",
         title: "Anime",
-        icon: Tv,
-        image: moodCity,
-        kicker: "Stories in motion",
+        icon: Film,
+        image: tokyo,
+        kicker: "Stories with craft",
         description:
-          "Slice-of-life comfort shows, sprawling sci-fi epics and the occasional series that ruins me emotionally for a week.",
-        highlights: ["Seasonal watchlist", "Soundtrack collector", "Studio art-style nerd"],
-        tags: ["Sci-fi", "Slice of life", "Mecha", "Lofi vibes"],
+          "Character-driven drama, grounded sci-fi and series with real direction — the kind of shows where every frame is composed with intent.",
+        specs: [
+          { label: "Genre", value: "Sci-fi / Drama" },
+          { label: "Format", value: "Seasonal + classics" },
+          { label: "Watching for", value: "Direction & score" },
+        ],
+        tags: ["Sci-fi", "Seinen", "Psychological", "Soundtracks"],
       },
       {
         id: "gaming",
+        code: "GM",
         title: "Gaming",
         icon: Gamepad2,
-        image: moodSetup,
-        kicker: "Worlds worth getting lost in",
+        image: rig,
+        kicker: "Racing lines & long campaigns",
         description:
-          "Open worlds, cozy sims and late-night co-op with friends. Equal parts explorer and try-hard.",
-        highlights: ["Co-op enjoyer", "Photo-mode addict", "Side-quest completionist"],
-        tags: ["RPG", "Co-op", "Indie", "Rhythm"],
+          "Sim racing on a wheel and pedals, competitive sessions with friends and the occasional story game worth a slow, careful playthrough.",
+        specs: [
+          { label: "Main", value: "Sim racing" },
+          { label: "Setup", value: "Wheel & pedals" },
+          { label: "Style", value: "Clean & consistent" },
+        ],
+        tags: ["Sim racing", "Time trials", "Co-op", "Story games"],
       },
       {
         id: "music",
+        code: "MS",
         title: "Music",
         icon: Headphones,
-        image: moodMusic,
+        image: headphones,
         kicker: "Always something playing",
         description:
-          "Synthwave, city pop, J-rock and anything with a bassline that hits at 2am. Playlists for every mood.",
-        highlights: ["Vinyl curious", "Playlist architect", "Concert hopper"],
-        tags: ["Synthwave", "City pop", "J-rock", "Lofi"],
+          "Electronic, alt-R&B and late-night drive music. Playlists are built like setups: tuned for a mood, a road and a time of day.",
+        specs: [
+          { label: "Sound", value: "Electronic / R&B" },
+          { label: "Context", value: "Night drives" },
+          { label: "Format", value: "Curated playlists" },
+        ],
+        tags: ["Electronic", "Alt-R&B", "Phonk", "Ambient"],
       },
       {
         id: "tech",
+        code: "TC",
         title: "Tech",
-        icon: Cpu,
-        image: moodTech,
-        kicker: "Tinkering after midnight",
+        icon: Code2,
+        image: keyboard,
+        kicker: "Tuning the setup",
         description:
-          "Building little web experiments, customizing setups and reading about the future way past bedtime.",
-        highlights: ["Web experiments", "Custom keyboards", "Desk setup tuning"],
-        tags: ["Web", "Hardware", "Creative code", "AI"],
+          "Desk setups, keyboards, streaming gear and small web projects. Interested in how things are made, then how to make them a little better.",
+        specs: [
+          { label: "Focus", value: "Setups & streaming" },
+          { label: "Builds", value: "Web projects" },
+          { label: "Weakness", value: "New hardware" },
+        ],
+        tags: ["Hardware", "Streaming", "Web", "Keyboards"],
       },
     ] satisfies Interest[],
   },
 
   favorites: {
-    eyebrow: "03 — Favorites",
-    heading: "The hall of fame.",
-    note: "Placeholder picks — every title here is fictional. Swap in your real favorites.",
+    eyebrow: "03 — Collection",
+    heading: "The collection.",
+    note: "Placeholder picks — swap in your real favorites.",
     items: [
-      { category: "Anime", title: "Starlight Requiem", note: "The finale still lives rent-free in my head.", image: moodSky, rating: 5 },
-      { category: "Game", title: "Circuit Ronin", note: "300 hours and still finding secrets.", image: moodSetup, rating: 5 },
-      { category: "Album", title: "Midnight Frequency", note: "The perfect late-night drive soundtrack.", image: moodMusic, rating: 4 },
-      { category: "City", title: "Neon District 9", note: "A place that only exists in my dreams.", image: moodCity, rating: 5 },
-      { category: "Gadget", title: "Prism Keyboard", note: "Clicky, colorful, unnecessary. Perfect.", image: moodTech, rating: 4 },
-      { category: "Art", title: "Chrome Bloom", note: "The piece that inspired this whole site.", image: holo, rating: 5 },
+      { category: "Series", title: "Night Circuit", note: "Placeholder · the one I rewatch every year.", image: tokyo, rating: 5 },
+      { category: "Game", title: "Endurance Line", note: "Placeholder · hundreds of laps, still learning.", image: rig, rating: 5 },
+      { category: "Album", title: "Low Frequency Drive", note: "Placeholder · built for the motorway at 2am.", image: headphones, rating: 4 },
+      { category: "Machine", title: "Silver Coupé", note: "Placeholder · the dream car on the wall.", image: detail, rating: 5 },
+      { category: "Setup", title: "Graphite Desk", note: "Placeholder · forever being tuned.", image: keyboard, rating: 4 },
+      { category: "Place", title: "The Long Tunnel", note: "Placeholder · favourite stretch of road.", image: tunnel, rating: 5 },
     ] satisfies Favorite[],
   },
 
   now: {
-    eyebrow: "04 — Currently",
-    heading: "What I'm into right now.",
+    eyebrow: "04 — Live",
+    heading: "Live telemetry.",
     items: [
-      { label: "Watching", title: "Starlight Requiem S2", detail: "Episode 7 of 12", progress: 58, icon: Tv },
-      { label: "Playing", title: "Circuit Ronin", detail: "Chapter 4 · side quests", progress: 72, icon: Gamepad2 },
-      { label: "Listening", title: "Midnight Frequency", detail: "On repeat this week", progress: 100, icon: Headphones },
-      { label: "Building", title: "This website", detail: "Always tweaking something", progress: 85, icon: Hammer },
-      { label: "Reading", title: "A sci-fi novel", detail: "Chapter 12 of 30", progress: 40, icon: BookOpen },
-      { label: "Learning", title: "Creative coding", detail: "Shaders & motion", progress: 30, icon: GraduationCap },
+      { label: "Watching", title: "A new season", detail: "Episode 7 of 12", progress: 58, icon: Film },
+      { label: "Racing", title: "Time trial league", detail: "Chasing 0.3s", progress: 74, icon: Gauge },
+      { label: "Listening", title: "Night drive playlist", detail: "On repeat", progress: 100, icon: Disc3 },
+      { label: "Building", title: "This website", detail: "Always tweaking", progress: 86, icon: Wrench },
     ] satisfies NowItem[],
   },
 
   gallery: {
-    eyebrow: "05 — Moodboard",
-    heading: "A visual diary.",
+    eyebrow: "05 — Gallery",
+    heading: "Visual moodboard.",
     items: [
-      { src: moodAvatar, alt: "Silhouette with neon headphones overlooking a city", caption: "Rooftop thoughts", width: 1024, height: 1280 },
-      { src: moodSetup, alt: "Neon-lit gaming desk setup", caption: "The battle station", width: 1280, height: 1024 },
-      { src: moodSky, alt: "Anime-style dusk sky with crescent moon", caption: "Dusk o'clock", width: 1024, height: 1024 },
-      { src: moodCity, alt: "Rainy neon city street at night", caption: "Rain & neon", width: 1024, height: 1280 },
-      { src: moodMusic, alt: "Vinyl record and headphones under neon light", caption: "Side B", width: 1024, height: 1024 },
-      { src: moodTech, alt: "Glowing circuit board with holographic code", caption: "3am builds", width: 1280, height: 1024 },
-      { src: holo, alt: "Iridescent chrome sculpture", caption: "Chrome bloom", width: 1280, height: 1600 },
+      { src: heroCar, alt: "Silver coupe in a pale grey studio", caption: "Studio session", plate: "01", width: 1920, height: 1088 },
+      { src: tunnel, alt: "Light trails in a night tunnel", caption: "Long exposure", plate: "02", width: 1280, height: 1600 },
+      { src: rig, alt: "Racing simulator cockpit in a dark room", caption: "The cockpit", plate: "03", width: 1600, height: 1072 },
+      { src: helmet, alt: "Matte graphite helmet with a blue stripe", caption: "Race kit", plate: "04", width: 1280, height: 1600 },
+      { src: tokyo, alt: "Quiet Tokyo street after rain", caption: "After the rain", plate: "05", width: 1280, height: 1600 },
+      { src: detail, alt: "Close-up of a silver car headlight", caption: "Lines & light", plate: "06", width: 1600, height: 1072 },
+      { src: headphones, alt: "Studio headphones on brushed aluminum", caption: "Listening room", plate: "07", width: 1280, height: 1280 },
+      { src: keyboard, alt: "Keyboard and laptop on a graphite desk", caption: "The desk", plate: "08", width: 1600, height: 1072 },
     ] satisfies GalleryItem[],
   },
 
   contact: {
-    eyebrow: "06 — Contact",
-    heading: "Come say hi.",
-    blurb:
-      "Want to swap recommendations, team up in a game or just say hello? These are placeholder links — replace them with your own.",
-    email: "hello@example.com",
+    eyebrow: "06 — Connect",
+    heading: "Find me on the grid.",
+    blurb: "Clips, streams, playlists and late-night chats. Pick a channel.",
     socials: [
-      { label: "Discord", handle: "nova#0000", href: "#" },
-      { label: "Instagram", handle: "@your.handle", href: "#" },
-      { label: "X / Twitter", handle: "@your_handle", href: "#" },
-      { label: "Twitch", handle: "/your-channel", href: "#" },
-      { label: "GitHub", handle: "@your-handle", href: "#" },
-      { label: "Spotify", handle: "Your playlists", href: "#" },
+      { label: "YouTube", handle: "@lightsyncc", href: "https://youtube.com/@lightsyncc", cta: "Watch videos" },
+      { label: "Twitch", handle: "lightsyncc", href: "https://www.twitch.tv/lightsyncc", cta: "Catch a stream" },
+      { label: "TikTok", handle: "Short clips", href: "https://vm.tiktok.com/ZS9f9RnpKH3Pf-BjlOW/", cta: "Watch clips" },
+      { label: "X", handle: "@LIGHTSYNCC", href: "https://x.com/LIGHTSYNCC", cta: "Follow" },
+      { label: "Discord", handle: "Add me", href: "https://discord.com/users/1432325408367443999", cta: "Say hi" },
+      { label: "Spotify", handle: "Playlists", href: "https://open.spotify.com/user/31xrdrxtsj2egf3ifzcnigdol3dm", cta: "Listen" },
     ] satisfies Social[],
   },
 };

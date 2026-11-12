@@ -15,7 +15,7 @@ import { motion } from "motion/react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { AmbientBackground } from "@/components/site/AmbientBackground";
+import { ScrollProgress } from "@/components/site/ScrollProgress";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { Toaster } from "@/components/ui/sonner";
@@ -87,11 +87,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "theme-color", content: "#140d1f" },
-      { title: `${profile.name} — Personal Site` },
-      { name: "description", content: `Meet ${profile.name}: who I am, what I love and how to reach me.` },
-      { property: "og:title", content: `${profile.name} — Personal Site` },
-      { property: "og:description", content: `Meet ${profile.name}: who I am, what I love and how to reach me.` },
+      { name: "theme-color", content: "#f3f4f6" },
+      { title: `${profile.alias} — Personal Hub` },
+      { name: "description", content: `${profile.alias}: sim racing, anime, music and tech.` },
+      { property: "og:title", content: `${profile.alias} — Personal Hub` },
+      { property: "og:description", content: `${profile.alias}: sim racing, anime, music and tech.` },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -100,7 +100,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800;900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap",
       },
       {
         rel: "stylesheet",
@@ -140,7 +140,8 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AmbientBackground />
+      <ScrollProgress />
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-[70] grain" />
       <Nav />
       <motion.main
         key={pathname}

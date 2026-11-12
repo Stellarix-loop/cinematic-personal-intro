@@ -1,18 +1,16 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/site/PageHeader";
 import { Reveal } from "@/components/site/RevealWords";
-import { TiltCard } from "@/components/site/TiltCard";
+import { FavoritesCollection, NextPage } from "@/components/site/sections";
 import { profile } from "@/content/profile";
 
 export const Route = createFileRoute("/interests")({
   head: () => ({
     meta: [
-      { title: `Interests — ${profile.name}` },
-      { name: "description", content: `The passions, hobbies and ideas that keep ${profile.name} curious.` },
-      { property: "og:title", content: `Interests — ${profile.name}` },
-      { property: "og:description", content: `The passions, hobbies and ideas that keep ${profile.name} curious.` },
+      { title: `Interests — ${profile.alias}` },
+      { name: "description", content: `Anime, gaming, music and tech — the four disciplines ${profile.alias} keeps tuning.` },
+      { property: "og:title", content: `Interests — ${profile.alias}` },
+      { property: "og:description", content: `Anime, gaming, music and tech with ${profile.alias}.` },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -23,53 +21,34 @@ export const Route = createFileRoute("/interests")({
 function InterestsPage() {
   const { interests } = profile;
   return (
-    <div className="mx-auto max-w-7xl px-5 pb-28 md:px-10 md:pb-40">
-      <PageHeader eyebrow={interests.eyebrow} title="Interests" kicker={interests.heading} />
-
-      <div className="mt-16 grid gap-5 sm:grid-cols-2 md:mt-24 lg:grid-cols-4">
-        {interests.items.map((it, i) => {
-          const Icon = it.icon;
-          return (
-            <Reveal key={it.title} delay={(i % 4) * 0.08}>
-              <TiltCard className="flex h-full min-h-72 flex-col p-7">
-                <div className="flex items-start justify-between">
-                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-spectrum-animated text-primary-foreground shadow-neon transition-transform duration-500 group-hover:-rotate-12 group-hover:scale-110">
-                    <Icon className="h-6 w-6" />
-                  </span>
-                  <span className="font-mono text-xs text-muted-foreground">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <h2 className="mt-10 font-display text-2xl font-black uppercase transition-colors group-hover:text-primary">
-                  {it.title}
-                </h2>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{it.blurb}</p>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {it.tags.map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-full border border-border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
-                    >
-                      {t}
-                    </span>
+    <>
+      <div className="mx-auto max-w-7xl px-5 md:px-10">
+        <PageHeader eyebrow={interests.eyebrow} title="Interests" kicker={interests.heading} />
+        <div className="mt-16 space-y-20 md:mt-24 md:space-y-28">
+          {interests.items.map((it, i) => (
+            <Reveal key={it.id} className="grid gap-8 md:grid-cols-12 md:items-center">
+              <img src={it.image} alt={it.title} loading="lazy" className={`aspect-[16/10] w-full rounded-sm object-cover md:col-span-7 ${i % 2 ? "md:order-2" : ""}`} />
+              <div className="md:col-span-5">
+                <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-primary">{String(i + 1).padStart(2, "0")} · {it.kicker}</p>
+                <h2 className="mt-4 font-display text-5xl font-black uppercase font-wide md:text-6xl">{it.title}</h2>
+                <p className="mt-5 leading-relaxed text-muted-foreground">{it.description}</p>
+                <dl className="mt-8 divide-y divide-border border-y border-border">
+                  {it.specs.map((s) => (
+                    <div key={s.label} className="flex justify-between py-3 font-mono text-[11px] uppercase tracking-[0.2em]">
+                      <dt className="text-muted-foreground">{s.label}</dt><dd>{s.value}</dd>
+                    </div>
                   ))}
+                </dl>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {it.tags.map((t) => <span key={t} className="rounded-sm border border-border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{t}</span>)}
                 </div>
-              </TiltCard>
+              </div>
             </Reveal>
-          );
-        })}
+          ))}
+        </div>
       </div>
-
-      <Reveal className="mt-20 flex flex-col items-start justify-between gap-6 rounded-[2rem] border-spectrum p-8 md:flex-row md:items-center md:p-12">
-        <p className="font-display text-2xl font-black uppercase md:text-4xl">
-          Share any of these? <span className="text-spectrum">Let's connect.</span>
-        </p>
-        <Button asChild variant="neon" size="xl">
-          <Link to="/contact">
-            Get in touch <ArrowRight />
-          </Link>
-        </Button>
-      </Reveal>
-    </div>
+      <FavoritesCollection />
+      <NextPage to="/gallery" label="Gallery" />
+    </>
   );
 }

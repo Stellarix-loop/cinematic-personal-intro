@@ -4,48 +4,48 @@ import { createPortal } from "react-dom";
 import { profile } from "@/content/profile";
 import { cinematicEase, seeded } from "./motion-utils";
 
-type Phase = "count" | "words" | "exit";
+type Phase = "rev" | "words" | "exit";
+
+const ARC = 251.3; // length of the tachometer arc path (r = 80, 180°)
 
 /**
- * Cinematic opening: boot counter → words fly in one by one → name glitches in →
- * the screen splits open. Calls onReveal as the curtain starts lifting, onFinish when gone.
+ * Cinematic opening: tachometer revs to the redline → words streak in →
+ * the alias lands in chrome → shutters open. onReveal fires as the shutters open.
  */
 export function Intro({ onReveal, onFinish }: { onReveal: () => void; onFinish: () => void }) {
-  const [phase, setPhase] = useState<Phase>("count");
-  const [count, setCount] = useState(0);
+  const [phase, setPhase] = useState<Phase>("rev");
+  const [rpm, setRpm] = useState(0);
   const [wordIndex, setWordIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  const sequence = [...profile.introWords, profile.name];
+  const sequence = [...profile.introWords, profile.alias];
 
-  // Boot counter
   useEffect(() => {
-    if (phase !== "count") return;
+    if (phase !== "rev") return;
     let raf = 0;
+    let timeout = 0;
     const t0 = performance.now();
-    const dur = 1300;
+    const dur = 1400;
     const tick = (t: number) => {
       const p = Math.min((t - t0) / dur, 1);
-      setCount(Math.round((1 - Math.pow(1 - p, 3)) * 100));
+      setRpm(1 - Math.pow(1 - p, 3));
       if (p < 1) raf = requestAnimationFrame(tick);
-      else setTimeout(() => setPhase("words"), 180);
+      else timeout = window.setTimeout(() => setPhase("words"), 200);
     };
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(timeout);
+    };
   }, [phase]);
 
-  // Word sequence
   useEffect(() => {
     if (phase !== "words") return;
     const isLast = wordIndex === sequence.length - 1;
-    const id = setTimeout(
-      () => (isLast ? setPhase("exit") : setWordIndex((i) => i + 1)),
-      isLast ? 1300 : 520,
-    );
+    const id = setTimeout(() => (isLast ? setPhase("exit") : setWordIndex((i) => i + 1)), isLast ? 1300 : 480);
     return () => clearTimeout(id);
   }, [phase, wordIndex, sequence.length]);
 
-  // Exit
   useEffect(() => {
     if (phase !== "exit") return;
     onReveal();
@@ -53,85 +53,120 @@ export function Intro({ onReveal, onFinish }: { onReveal: () => void; onFinish: 
     return () => clearTimeout(id);
   }, [phase, onReveal, onFinish]);
 
-  const skip = () => setPhase("exit");
   const exiting = phase === "exit";
   const word = sequence[wordIndex];
-  const isName = wordIndex === sequence.length - 1;
-  const dir = seeded(wordIndex + 3);
-  const fromX = (dir - 0.5) * 900;
-  const fromY = (seeded(wordIndex + 9) - 0.5) * 500;
+  const isAlias = wordIndex === sequence.length - 1;
+  const rpmValue = Math.round(rpm * 8000);
+  const redline = rpm > 0.86;
 
-  // Portal to <body> so page transforms/filters can't trap the fixed overlay.
-  if (!mounted) return <div className="fixed inset-0 z-[100] bg-background" />;
+  if (!mounted) return <div className="carbon fixed inset-0 z-[100]" />;
 
   return createPortal(
     <div className="fixed inset-0 z-[100] overflow-hidden" role="presentation">
-      {/* Split curtain */}
+      {/* Shutters */}
       <motion.div
-        className="absolute inset-x-0 top-0 h-1/2 bg-background"
+        className="carbon absolute inset-x-0 top-0 h-1/2"
         animate={exiting ? { y: "-100%" } : { y: 0 }}
-        transition={{ duration: 1.1, ease: [0.76, 0, 0.24, 1], delay: 0.15 }}
+        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.15 }}
       />
       <motion.div
-        className="absolute inset-x-0 bottom-0 h-1/2 bg-background"
+        className="carbon absolute inset-x-0 bottom-0 h-1/2"
         animate={exiting ? { y: "100%" } : { y: 0 }}
-        transition={{ duration: 1.1, ease: [0.76, 0, 0.24, 1], delay: 0.15 }}
-      />
-      <motion.div
-        className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-spectrum shadow-neon"
-        initial={{ scaleX: 0 }}
-        animate={exiting ? { scaleX: 1, opacity: [1, 1, 0] } : { scaleX: count / 100 }}
-        transition={exiting ? { duration: 0.6 } : { duration: 0.1 }}
+        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.15 }}
       />
 
       <motion.div
-        className="absolute inset-0"
-        animate={exiting ? { opacity: 0, scale: 1.08, filter: "blur(12px)" } : { opacity: 1 }}
-        transition={{ duration: 0.5, ease: cinematicEase }}
+        className="carbon absolute inset-0 bg-transparent"
+        animate={exiting ? { opacity: 0, scale: 1.04 } : { opacity: 1 }}
+        transition={{ duration: 0.45, ease: cinematicEase }}
       >
-        <div className="absolute left-5 top-6 font-mono text-[10px] uppercase tracking-[0.35em] text-muted-foreground md:left-10 md:top-8">
-          ◉ Sys / Init — Transmission
+        <div className="absolute inset-x-5 top-6 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground md:inset-x-10 md:top-8">
+          <span>
+            <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-redline animate-blink" />
+            System check
+          </span>
+          <button
+            type="button"
+            onClick={() => setPhase("exit")}
+            className="rounded-sm border border-border px-4 py-2 transition-colors hover:border-foreground hover:text-foreground"
+          >
+            Skip intro
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={skip}
-          className="absolute right-5 top-5 rounded-full glass px-4 py-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-foreground md:right-10 md:top-7"
-        >
-          Skip intro
-        </button>
 
-        {phase === "count" && (
-          <div className="absolute bottom-6 right-5 font-display text-[clamp(4rem,18vw,12rem)] font-black leading-none tabular-nums text-outline md:bottom-8 md:right-10">
-            {String(count).padStart(3, "0")}
-          </div>
-        )}
-        {phase === "count" && (
-          <div className="absolute bottom-8 left-5 font-mono text-[10px] uppercase tracking-[0.35em] text-muted-foreground md:left-10">
-            Loading experience
+        {phase === "rev" && (
+          <div className="absolute inset-0 grid place-items-center">
+            <div className="relative w-[min(78vw,420px)]">
+              <svg viewBox="0 0 200 110" className="w-full overflow-visible">
+                {Array.from({ length: 9 }).map((_, i) => {
+                  const a = Math.PI - (i / 8) * Math.PI;
+                  const x1 = 100 + Math.cos(a) * 92;
+                  const y1 = 100 - Math.sin(a) * 92;
+                  const x2 = 100 + Math.cos(a) * 98;
+                  const y2 = 100 - Math.sin(a) * 98;
+                  return (
+                    <line
+                      key={i}
+                      x1={x1}
+                      y1={y1}
+                      x2={x2}
+                      y2={y2}
+                      stroke={i >= 7 ? "var(--redline)" : "currentColor"}
+                      strokeWidth="1.2"
+                      className="text-muted-foreground"
+                    />
+                  );
+                })}
+                <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="var(--border)" strokeWidth="6" />
+                <path
+                  d="M20 100 A80 80 0 0 1 180 100"
+                  fill="none"
+                  stroke={redline ? "var(--redline)" : "var(--primary)"}
+                  strokeWidth="6"
+                  strokeDasharray={ARC}
+                  strokeDashoffset={ARC * (1 - rpm)}
+                />
+              </svg>
+              <div className="absolute inset-x-0 bottom-0 text-center">
+                <div className="font-display text-[clamp(2.5rem,10vw,4.5rem)] font-black leading-none tabular-nums font-wide">
+                  {String(rpmValue).padStart(4, "0")}
+                </div>
+                <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
+                  RPM · warming up
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
         <div className="absolute inset-0 grid place-items-center px-4">
           <AnimatePresence mode="popLayout">
-            {phase !== "count" && (
+            {phase !== "rev" && (
               <motion.div
                 key={word}
-                initial={{ opacity: 0, x: fromX, y: fromY, scale: 2.2, rotate: (dir - 0.5) * 30, filter: "blur(24px)" }}
-                animate={{ opacity: 1, x: 0, y: 0, scale: 1, rotate: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, scale: 0.6, filter: "blur(16px)", y: -40 }}
-                transition={{ duration: 0.55, ease: cinematicEase }}
+                initial={{ opacity: 0, x: 280 + seeded(wordIndex) * 200, skewX: -20, filter: "blur(18px)" }}
+                animate={{ opacity: 1, x: 0, skewX: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, x: -260, skewX: 16, filter: "blur(14px)" }}
+                transition={{ duration: 0.5, ease: cinematicEase }}
                 className="text-center"
               >
                 <span
-                  data-text={word}
                   className={
-                    isName
-                      ? "glitch font-display text-[clamp(3.5rem,16vw,14rem)] font-black uppercase leading-none"
-                      : "font-display text-[clamp(3rem,12vw,9rem)] font-black uppercase leading-none text-foreground"
+                    isAlias
+                      ? "font-display text-[clamp(3.5rem,17vw,14rem)] font-black uppercase leading-none font-wide text-chrome"
+                      : "font-display text-[clamp(2.5rem,10vw,7rem)] font-extrabold uppercase leading-none font-wide"
                   }
                 >
-                  <span className={isName ? "text-spectrum" : undefined}>{word}</span>
+                  {word}
                 </span>
+                {isAlias && (
+                  <motion.div
+                    className="mx-auto mt-6 h-[3px] w-40 origin-left livery-stripe"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.8, delay: 0.25, ease: cinematicEase }}
+                  />
+                )}
               </motion.div>
             )}
           </AnimatePresence>
