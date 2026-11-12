@@ -11,7 +11,14 @@ type FlyTextProps = {
   /** Paint a single continuous spectrum gradient across all letters */
   gradient?: boolean;
   seedOffset?: number;
+  label?: string;
 };
+
+/** Glyphs the display font may lack, drawn with safe substitutes. */
+function Glyph({ ch }: { ch: string }) {
+  if (ch === "Λ") return <span className="glyph-flip">V</span>;
+  return <>{ch === " " ? "\u00A0" : ch}</>;
+}
 
 /** Splits text into letters that fly in from scattered positions and settle into place. */
 export function FlyText({
@@ -22,12 +29,13 @@ export function FlyText({
   className,
   gradient = false,
   seedOffset = 0,
+  label,
 }: FlyTextProps) {
   const letters = Array.from(text);
   const n = letters.length;
 
   return (
-    <span className={cn("inline-block whitespace-nowrap", className)} aria-label={text} role="text">
+    <span className={cn("inline-block whitespace-nowrap", className)} aria-label={label ?? text} role="text">
       {letters.map((ch, i) => {
         const s = i + seedOffset;
         const from = {
@@ -42,27 +50,40 @@ export function FlyText({
           <motion.span
             key={`${ch}-${i}`}
             aria-hidden
-            className={cn("inline-block will-change-transform", gradient && "text-spectrum-static")}
-            style={
-              gradient
-                ? {
-                    backgroundSize: `${n * 100}% 100%`,
-                    backgroundPosition: `${(i / Math.max(n - 1, 1)) * 100}% 50%`,
-                  }
-                : {}
-            }
+            className="inline-block will-change-transform"
             initial={from}
-            animate={
-              start
-                ? { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1, filter: "blur(0px)" }
-                : from
-            }
+            animate={start ? { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1, filter: "blur(0px)" } : from}
             transition={{ duration: 1.1, delay: delay + i * stagger, ease: cinematicEase }}
           >
-            {ch === " " ? "\u00A0" : ch}
+            <span
+              className={cn("inline-block", gradient && "text-spectrum-static")}
+              style={
+                gradient
+                  ? {
+                      backgroundSize: `${n * 100}% 100%`,
+                      backgroundPosition: `${(i / Math.max(n - 1, 1)) * 100}% 50%`,
+                    }
+                  : {}
+              }
+            >
+              <Glyph ch={ch} />
+            </span>
           </motion.span>
         );
       })}
+    </span>
+  );
+}
+
+/** Static, font-safe rendering of the alias (no animation). */
+export function AliasText({ text, className }: { text: string; className?: string }) {
+  return (
+    <span className={className} aria-label={text} role="text">
+      {Array.from(text).map((ch, i) => (
+        <span key={i} aria-hidden>
+          <Glyph ch={ch} />
+        </span>
+      ))}
     </span>
   );
 }

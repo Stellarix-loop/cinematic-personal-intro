@@ -376,3 +376,28 @@
   mask-image: radial-gradient(closest-side, black 55%, transparent 100%);
   -webkit-mask-image: radial-gradient(closest-side, black 55%, transparent 100%);
 }
+
+/* Renders an upside-down V as a font-safe Greek Λ */
+@utility glyph-flip {
+  display: inline-block;
+  transform: scaleY(-1);
+}
+
+@utility glitch-jitter {
+  animation: glitch-jitter 5.5s steps(1) infinite;
+}
+
+@keyframes glitch-jitter {
+  0%, 100% { transform: none; filter: none; clip-path: none; }
+  78% { transform: translate(-0.02em, 0) skewX(-6deg); filter: drop-shadow(0.05em 0 var(--neon-blue)) drop-shadow(-0.05em 0 var(--neon-red)); clip-path: inset(8% 0 34% 0); }
+  79% { transform: translate(0.03em, 0); filter: drop-shadow(-0.06em 0 var(--neon-blue)) drop-shadow(0.06em 0 var(--neon-pink)); clip-path: inset(52% 0 4% 0); }
+  80% { transform: translate(-0.01em, 0) skewX(3deg); filter: drop-shadow(0.03em 0 var(--neon-blue)); clip-path: none; }
+  81% { transform: none; filter: none; }
+  93% { transform: translate(0.02em, 0) skewX(4deg); filter: drop-shadow(0.05em 0 var(--neon-blue)) drop-shadow(-0.05em 0 var(--neon-red)); }
+  94% { transform: none; filter: none; }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
