@@ -28,3 +28,9 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- All personal copy, interests and contact links live in `src/content/profile.ts`; pages only read from it so the owner can edit content in one place.
+- Full-screen overlays (intro, menus) must render outside `<main>` or via a portal to `document.body`: the page-transition wrapper keeps a CSS filter, which traps `position: fixed` children.
+- Visual tokens (neon spectrum colors, gradients, glass, glitch) are defined as utilities in `src/styles.css`; components use those utilities instead of raw colors.

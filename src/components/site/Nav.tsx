@@ -34,7 +34,7 @@ export function Nav() {
       <header
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-all duration-500",
-          scrolled ? "py-3" : "py-5 md:py-7",
+          scrolled ? "border-b border-border bg-background/70 py-3 backdrop-blur-xl" : "py-5 md:py-7",
         )}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 md:px-10">
@@ -47,19 +47,15 @@ export function Nav() {
             </span>
           </Link>
 
-          <nav
-            className={cn(
-              "hidden items-center gap-1 rounded-full p-1.5 transition-all duration-500 md:flex",
-              scrolled && "glass",
-            )}
-          >
+          <nav className="hidden items-center gap-1 rounded-full p-1.5 md:flex">
             {links.map((l) => (
               <Link
                 key={l.to}
                 to={l.to}
                 activeOptions={{ exact: true }}
-                className="group relative rounded-full px-5 py-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
+                className="group relative rounded-full px-5 py-2 font-mono text-xs uppercase tracking-[0.2em] transition-colors hover:text-foreground"
                 activeProps={{ className: "text-foreground" }}
+                inactiveProps={{ className: "text-muted-foreground" }}
               >
                 {({ isActive }) => (
                   <>
@@ -109,8 +105,9 @@ export function Nav() {
                   <Link
                     to={l.to}
                     activeOptions={{ exact: true }}
-                    className="flex items-baseline gap-4 py-2 font-display text-5xl font-bold uppercase text-foreground"
+                    className="flex items-baseline gap-4 py-2 font-display text-[clamp(2.25rem,11vw,3rem)] font-bold uppercase"
                     activeProps={{ className: "text-spectrum" }}
+                    inactiveProps={{ className: "text-foreground" }}
                   >
                     <span className="font-mono text-xs text-muted-foreground">{l.n}</span>
                     {l.label}
