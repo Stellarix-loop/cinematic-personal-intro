@@ -142,6 +142,16 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AmbientBackground />
       <Nav />
+      {!isFirst && (
+        <motion.div
+          key={`sweep-${pathname}`}
+          aria-hidden
+          className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-spectrum shadow-neon"
+          initial={{ scaleX: 0, opacity: 1 }}
+          animate={{ scaleX: 1, opacity: [1, 1, 0] }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], opacity: { duration: 0.9, times: [0, 0.7, 1] } }}
+        />
+      )}
       <motion.main
         key={pathname}
         className="relative z-10 min-h-screen"

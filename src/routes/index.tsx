@@ -93,7 +93,7 @@ function Hero({ ready, onReplay }: { ready: boolean; onReplay: () => void }) {
       }}
     >
       {/* Floating sculpture */}
-      <div className="pointer-events-none absolute -right-[30%] top-1/2 w-[110vw] max-w-[760px] -translate-y-1/2 sm:-right-[12%] sm:w-[70vw] lg:right-[2%] lg:w-[46vw]">
+      <div className="pointer-events-none absolute -right-[30%] top-1/2 opacity-50 sm:opacity-100 w-[110vw] max-w-[760px] -translate-y-1/2 sm:-right-[12%] sm:w-[70vw] lg:right-[2%] lg:w-[46vw]">
         <motion.div style={{ x: imgX, y: imgY }}>
           <motion.img
             src={sculpture}
@@ -198,7 +198,7 @@ function RoleRotator({ start }: { start: boolean }) {
   }, [start, roles.length]);
 
   return (
-    <span className="relative inline-flex overflow-hidden pb-1 align-bottom">
+    <span className="relative inline-flex overflow-hidden pb-1 align-bottom" aria-live="polite">
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
           key={roles[i]}

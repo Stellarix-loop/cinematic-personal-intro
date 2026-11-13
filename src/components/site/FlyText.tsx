@@ -32,9 +32,9 @@ export function FlyText({
         const s = i + seedOffset;
         const from = {
           opacity: 0,
-          x: (seeded(s) - 0.5) * 520,
-          y: (seeded(s + 7) - 0.5) * 360,
-          rotate: (seeded(s + 13) - 0.5) * 120,
+          x: `${(seeded(s) - 0.5) * 3}em`,
+          y: `${(seeded(s + 7) - 0.5) * 2}em`,
+          rotate: (seeded(s + 13) - 0.5) * 90,
           scale: 0.3 + seeded(s + 21) * 0.6,
           filter: "blur(14px)",
         };
@@ -54,7 +54,7 @@ export function FlyText({
             initial={from}
             animate={
               start
-                ? { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1, filter: "blur(0px)" }
+                ? { opacity: 1, x: "0em", y: "0em", rotate: 0, scale: 1, filter: "blur(0px)" }
                 : from
             }
             transition={{ duration: 1.1, delay: delay + i * stagger, ease: cinematicEase }}

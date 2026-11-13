@@ -10,6 +10,7 @@ export function AmbientBackground() {
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
       x.set(e.clientX);
       y.set(e.clientY);
     };
@@ -29,6 +30,7 @@ export function AmbientBackground() {
         className="absolute -left-[320px] -top-[320px] hidden h-[640px] w-[640px] rounded-full cursor-glow md:block"
       />
       <div className="absolute inset-x-0 top-0 h-48 scanline animate-scan" />
+      <div className="absolute inset-0 vignette" />
       <div className="absolute inset-0 grain" />
     </div>
   );

@@ -53,6 +53,15 @@ export function Intro({ onReveal, onFinish }: { onReveal: () => void; onFinish: 
     return () => clearTimeout(id);
   }, [phase, onReveal, onFinish]);
 
+  // Esc / Enter skips the opening
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || e.key === "Enter") setPhase("exit");
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   const skip = () => setPhase("exit");
   const exiting = phase === "exit";
   const word = sequence[wordIndex];
@@ -86,13 +95,13 @@ export function Intro({ onReveal, onFinish }: { onReveal: () => void; onFinish: 
 
       {/* Cinematic letterbox bars */}
       <motion.div
-        className="absolute inset-x-0 top-0 bg-black"
+        className="absolute inset-x-0 top-0 bg-void"
         initial={{ height: "0vh" }}
         animate={{ height: exiting ? "0vh" : "11vh" }}
         transition={{ duration: exiting ? 0.9 : 1.2, ease: cinematicEase, delay: exiting ? 0.1 : 0 }}
       />
       <motion.div
-        className="absolute inset-x-0 bottom-0 bg-black"
+        className="absolute inset-x-0 bottom-0 bg-void"
         initial={{ height: "0vh" }}
         animate={{ height: exiting ? "0vh" : "11vh" }}
         transition={{ duration: exiting ? 0.9 : 1.2, ease: cinematicEase, delay: exiting ? 0.1 : 0 }}
@@ -129,7 +138,7 @@ export function Intro({ onReveal, onFinish }: { onReveal: () => void; onFinish: 
           <AnimatePresence mode="popLayout">
             {phase !== "count" && (
               <motion.div
-                key={word}
+                key={wordIndex}
                 initial={{ opacity: 0, x: fromX, y: fromY, scale: 2.2, rotate: (dir - 0.5) * 30, filter: "blur(24px)" }}
                 animate={{ opacity: 1, x: 0, y: 0, scale: 1, rotate: 0, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 0.6, filter: "blur(16px)", y: -40 }}
@@ -150,6 +159,24 @@ export function Intro({ onReveal, onFinish }: { onReveal: () => void; onFinish: 
             )}
           </AnimatePresence>
         </div>
+
+        {phase === "words" && (
+          <div className="absolute bottom-8 left-5 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.35em] text-muted-foreground md:left-10">
+            <span className="text-primary">{String(wordIndex + 1).padStart(2, "0")}</span>
+            <span className="h-px w-8 bg-border" />
+            <span>{String(sequence.length).padStart(2, "0")}</span>
+          </div>
+        )}
+
+        {phase === "words" && isName && (
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 flash-spectrum"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: [0, 1, 0], scale: [0.8, 1.15, 1.3] }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
+          />
+        )}
 
         {phase === "words" && isName && (
           <motion.div

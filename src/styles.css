@@ -61,6 +61,7 @@
   --color-neon-blue: var(--neon-blue);
   --color-neon-purple: var(--neon-purple);
   --color-neon-red: var(--neon-red);
+  --color-void: var(--void);
   --color-glass: var(--glass);
   --color-glass-border: var(--glass-border);
 
@@ -137,6 +138,7 @@
   --input: oklch(0.97 0.012 320 / 16%);
   --ring: var(--neon-pink);
 
+  --void: oklch(0.07 0.025 290);
   --glass: oklch(0.2 0.05 295 / 45%);
   --glass-border: oklch(0.97 0.012 320 / 14%);
 
@@ -183,6 +185,7 @@
   }
 
   html {
+    overflow-x: clip;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -375,4 +378,12 @@
 @utility mask-fade {
   mask-image: radial-gradient(closest-side, black 55%, transparent 100%);
   -webkit-mask-image: radial-gradient(closest-side, black 55%, transparent 100%);
+}
+
+@utility vignette {
+  background: radial-gradient(ellipse at center, transparent 55%, color-mix(in oklab, var(--void) 75%, transparent) 100%);
+}
+
+@utility flash-spectrum {
+  background: radial-gradient(ellipse at center, color-mix(in oklab, var(--neon-pink) 35%, transparent), color-mix(in oklab, var(--neon-blue) 20%, transparent) 45%, transparent 75%);
 }
