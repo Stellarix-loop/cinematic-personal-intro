@@ -84,6 +84,20 @@ export function Intro({ onReveal, onFinish }: { onReveal: () => void; onFinish: 
         transition={exiting ? { duration: 0.6 } : { duration: 0.1 }}
       />
 
+      {/* Cinematic letterbox bars */}
+      <motion.div
+        className="absolute inset-x-0 top-0 bg-black"
+        initial={{ height: "0vh" }}
+        animate={{ height: exiting ? "0vh" : "11vh" }}
+        transition={{ duration: exiting ? 0.9 : 1.2, ease: cinematicEase, delay: exiting ? 0.1 : 0 }}
+      />
+      <motion.div
+        className="absolute inset-x-0 bottom-0 bg-black"
+        initial={{ height: "0vh" }}
+        animate={{ height: exiting ? "0vh" : "11vh" }}
+        transition={{ duration: exiting ? 0.9 : 1.2, ease: cinematicEase, delay: exiting ? 0.1 : 0 }}
+      />
+
       <motion.div
         className="absolute inset-0"
         animate={exiting ? { opacity: 0, scale: 1.08, filter: "blur(12px)" } : { opacity: 1 }}
@@ -136,6 +150,20 @@ export function Intro({ onReveal, onFinish }: { onReveal: () => void; onFinish: 
             )}
           </AnimatePresence>
         </div>
+
+        {phase === "words" && isName && (
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(105deg, transparent 38%, color-mix(in oklab, var(--neon-blue) 28%, transparent) 50%, transparent 62%)",
+            }}
+            initial={{ x: "-100%" }}
+            animate={{ x: "100%" }}
+            transition={{ duration: 1.4, delay: 0.35, ease: cinematicEase }}
+          />
+        )}
       </motion.div>
     </div>,
     document.body,
